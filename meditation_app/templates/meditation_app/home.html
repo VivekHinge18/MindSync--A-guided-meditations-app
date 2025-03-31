@@ -1,0 +1,111 @@
+{% extends 'meditation_app/base.html' %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="fw-bold text-white">Welcome to MindSync: Your Personal Meditation Guide</h1>
+    <p class="text-light">Track your meditation sessions, explore guided meditations, and improve your mindfulness.</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-lg guided-box">
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">🌿 Guided Meditations</h5>
+                    <p class="card-text text-muted">Explore guided meditations for relaxation and focus.</p>
+                    <a href="{% url 'guided_meditation_list' %}" class="btn btn-success w-100 btn-hover">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meditation Sessions Section -->
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg meditation-box">
+                <div class="card-body">
+                    <h5 class="card-title text-center fw-bold">🧘 Your Meditation Sessions</h5>
+
+                    <!-- Button to Redirect to Add Session Page -->
+                    <div class="text-center my-3">
+                        <a href="{% url 'add_session' %}" class="btn btn-primary w-100 btn-hover">➕ Add a Session</a>
+                    </div>
+                    <hr>
+
+                    <!-- Display Past Sessions -->
+                    <h6 class="text-center mt-3 text-muted">Past Sessions</h6>
+
+                    {% if past_sessions %}
+                    <ul class="list-group">
+                        {% for session in past_sessions %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center session-item">
+                            <div>
+                                <strong class="text-primary">{{ session.duration }} min</strong> <br>
+                                <span class="text-muted small">📅 {{ session.session_date|date:"d M, Y" }} | 🕒 {{ session.created_at|date:"h:i A" }}</span>
+
+                                {% if session.notes %}
+                                <p class="text-muted small mt-1">📝 {{ session.notes }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Edit Button -->
+                            <a href="{% url 'session_list' %}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-center text-muted mt-2">No past sessions yet. Start meditating today! ✨</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styling -->
+<style>
+    /* Background Gradient */
+    body {
+        background: linear-gradient(to right, #6dd5ed, #2193b0);
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .guided-box:hover,
+    .meditation-box:hover {
+        transform: scale(1.03);
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* List Group Item Styling */
+    .list-group-item {
+        border: none;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin: 5px 0;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .session-item:hover {
+        transform: scale(1.02);
+        background: rgba(0, 123, 255, 0.1);
+    }
+
+    /* Hover Effect for Buttons */
+    .btn-hover {
+        transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+    }
+
+    .btn-hover:hover {
+        transform: scale(1.05);
+    }
+
+    /* Text Styling */
+    h1, h5 {
+        color: #2c3e50;
+    }
+</style>
+
+{% endblock %}

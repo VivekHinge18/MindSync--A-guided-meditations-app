@@ -1,0 +1,88 @@
+{% extends 'meditation_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4 session-card">
+                <h3 class="text-center mb-4 session-title">🧘 Add a New Meditation Session</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Session Title</label>
+                        <input type="text" name="title" class="form-control input-field" placeholder="Enter session title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" class="form-control input-field" rows="3" placeholder="Briefly describe your session"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" name="duration" class="form-control input-field" placeholder="e.g., 20" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control input-field" rows="2" placeholder="Any additional thoughts"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-custom w-100">Add Session</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styling -->
+<style>
+    /* Card Styling */
+    .session-card {
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(to right, #E8F5E9, #F1F8E9);
+        padding: 20px;
+        transition: transform 0.3s ease-in-out;
+    }
+    .session-card:hover {
+        transform: scale(1.02);
+    }
+
+    /* Title Styling */
+    .session-title {
+        color: #2E7D32;
+        font-weight: bold;
+    }
+
+    /* Form Elements */
+    .input-field {
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #C8E6C9;
+        transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .input-field:focus {
+        border-color: #388E3C;
+        box-shadow: 0 0 8px rgba(56, 142, 60, 0.3);
+        outline: none;
+    }
+
+    /* Button Styling */
+    .btn-custom {
+        background-color: #4CAF50;
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        color: white;
+        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
+    .btn-custom:hover {
+        background-color: #388E3C;
+        transform: scale(1.05);
+    }
+</style>
+
+{% endblock %}

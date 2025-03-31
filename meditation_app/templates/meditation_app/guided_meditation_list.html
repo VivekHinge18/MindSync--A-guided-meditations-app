@@ -1,0 +1,221 @@
+{% extends 'meditation_app/base.html' %}
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <h2 class="text-4xl font-bold text-gray-800 mt-6">🌿 Guided Meditations</h2>
+    <p class="text-gray-600 text-lg text-center max-w-2xl mt-2">
+        Choose a meditation session to relax, focus, or sleep better. Click 'Start' to begin your journey.
+    </p>
+</div>
+
+<!-- Meditation Cards -->
+<div class="meditation-container mt-8">
+    <div class="meditation-card">
+        <h3>🌿 Relaxation Meditation</h3>
+        <p>Unwind and release stress with deep breathing exercises and soothing guidance.</p>
+        <button class="start-btn" data-time="300" data-type="Relaxation Meditation">Start 5 Min</button>
+    </div>
+
+    <div class="meditation-card">
+        <h3>🧘 Mindfulness Meditation</h3>
+        <p>Focus on the present moment, bringing awareness to breath and sensations.</p>
+        <button class="start-btn" data-time="600" data-type="Mindfulness Meditation">Start 10 Min</button>
+    </div>
+
+    <div class="meditation-card">
+        <h3>💤 Sleep Meditation</h3>
+        <p>Calm your mind and body with gentle music for deep, restful sleep.</p>
+        <button class="start-btn" data-time="900" data-type="Sleep Meditation">Start 15 Min</button>
+    </div>
+</div>
+
+<!-- Timer Section -->
+<div id="meditation-timer" class="hidden">
+    <div class="timer-box">
+        <h3 class="text-2xl font-semibold text-gray-700">🧘‍♀️ Meditation in Progress</h3>
+        <p class="text-gray-600 text-lg">Remaining Time: <span id="timer-display" class="font-bold text-xl">00:00</span></p>
+
+        <div class="flex gap-3 mt-4">
+            <button id="pause-btn">Pause</button>
+            <button id="resume-btn" class="hidden">Resume</button>
+            <button id="stop-btn">Stop</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #c2e59c, #64b3f4);
+        font-family: 'Arial', sans-serif;
+    }
+
+    .meditation-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .meditation-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .meditation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .meditation-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+
+    .meditation-card p {
+        color: #555;
+        font-size: 1rem;
+    }
+
+    .start-btn, #pause-btn, #resume-btn, #stop-btn {
+        margin-top: 15px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .start-btn {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    .start-btn:hover {
+        background: linear-gradient(to right, #2575fc, #6a11cb);
+        transform: scale(1.05);
+    }
+
+    #pause-btn {
+        background-color: #ffae00;
+    }
+
+    #pause-btn:hover {
+        background-color: #d98c00;
+    }
+
+    #resume-btn {
+        background-color: #2bc48a;
+    }
+
+    #resume-btn:hover {
+        background-color: #23a575;
+    }
+
+    #stop-btn {
+        background-color: #e63946;
+    }
+
+    #stop-btn:hover {
+        background-color: #d32f2f;
+    }
+
+    .timer-box {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    let countdown;
+    let timeLeft;
+    let isPaused = false;
+    let meditationType = "";
+
+    document.querySelectorAll(".start-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            meditationType = this.getAttribute("data-type");
+            startMeditation(this.dataset.time);
+        });
+    });
+
+    document.getElementById("pause-btn").addEventListener("click", pauseMeditation);
+    document.getElementById("resume-btn").addEventListener("click", resumeMeditation);
+    document.getElementById("stop-btn").addEventListener("click", stopMeditation);
+
+    function startMeditation(seconds) {
+        clearInterval(countdown);
+        timeLeft = parseInt(seconds);
+        document.getElementById("meditation-timer").classList.remove("hidden");
+        document.getElementById("resume-btn").classList.add("hidden");
+        document.getElementById("pause-btn").classList.remove("hidden");
+        updateTimerDisplay();
+        countdown = setInterval(() => {
+            if (!isPaused) {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    alert("✨ Meditation Complete!");
+                    saveMeditationSession(meditationType, seconds);
+                    stopMeditation();
+                }
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById("timer-display").textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function pauseMeditation() {
+        isPaused = true;
+        document.getElementById("pause-btn").classList.add("hidden");
+        document.getElementById("resume-btn").classList.remove("hidden");
+    }
+
+    function resumeMeditation() {
+        isPaused = false;
+        document.getElementById("pause-btn").classList.remove("hidden");
+        document.getElementById("resume-btn").classList.add("hidden");
+    }
+
+    function stopMeditation() {
+        clearInterval(countdown);
+        document.getElementById("meditation-timer").classList.add("hidden");
+    }
+
+    function saveMeditationSession(meditationType, duration) {
+        fetch("/save_meditation/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                meditation_type: meditationType,
+                duration: duration
+            })
+        }).then(response => response.json())
+          .then(data => console.log("Session saved:", data))
+          .catch(error => console.error("Error saving session:", error));
+    }
+</script>
+
+{% endblock %}

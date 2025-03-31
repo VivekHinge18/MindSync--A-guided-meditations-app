@@ -1,0 +1,13 @@
+{% extends 'meditation_app/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Delete Account</h2>
+    <p>Are you sure you want to delete your account? This action is irreversible.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

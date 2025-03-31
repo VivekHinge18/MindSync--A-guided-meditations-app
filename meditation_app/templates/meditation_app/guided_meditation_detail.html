@@ -1,0 +1,32 @@
+{% extends 'meditation_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">{{ meditation.title }}</h2>
+    <p class="text-center">{{ meditation.description }}</p>
+
+    <div class="text-center">
+        {% if meditation.audio_file %}
+        <audio controls>
+            <source src="{{ meditation.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        {% else %}
+        <p>No audio guide available.</p>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        <h4>Steps to Follow:</h4>
+        <ul>
+            <li>Find a quiet and comfortable place to sit.</li>
+            <li>Close your eyes and take a few deep breaths.</li>
+            <li>Listen to the guided meditation audio and follow the instructions.</li>
+            <li>Let go of distractions and focus on the present moment.</li>
+            <li>When finished, take a moment to reflect on your experience.</li>
+        </ul>
+    </div>
+
+    <a href="{% url 'guided_meditation_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+</div>
+{% endblock %}

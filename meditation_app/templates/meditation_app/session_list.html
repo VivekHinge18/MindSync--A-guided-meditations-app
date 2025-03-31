@@ -1,0 +1,78 @@
+{% extends 'meditation_app/base.html' %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .session-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .session-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .session-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .session-duration {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+        }
+        .edit-btn {
+            background-color: #4CAF50;
+        }
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+        .delete-btn {
+            background-color: #ff4d4d;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+
+    <h2>Meditation Sessions</h2>
+
+    <div class="session-container">
+        {% for session in sessions %}
+            <div class="session-card">
+                <div class="session-title">{{ session.title }}</div>
+                <div class="session-duration">{{ session.duration }} minutes</div>
+                <a href="{% url 'session_update' session.id %}" class="btn edit-btn">Edit</a>
+                <a href="{% url 'session_delete' session.id %}" class="btn delete-btn">Delete</a>
+            </div>
+        {% empty %}
+            <p>No meditation sessions found.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
